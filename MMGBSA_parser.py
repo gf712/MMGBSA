@@ -66,7 +66,11 @@ def main(data_dir, output_dir, output_file, verbose, plot, plot_title):
 	receptor_total = np.loadtxt('./Analysis/data._MMPBSA_receptor_gb')
 	ligand_total = np.loadtxt('./Analysis/data._MMPBSA_ligand_gb')
 
-	os.chdir('../'+output_dir)
+	if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+	os.chdir(output_dir)
+	
 	print 'Output Directory: ', os.getcwd()
 
 	if verbose:
