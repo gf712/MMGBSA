@@ -67,10 +67,10 @@ def main(data_dir, output_dir, output_file, verbose, plot, plot_title):
 	ligand_total = np.loadtxt('./Analysis/data._MMPBSA_ligand_gb')
 
 	if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+		os.makedirs(output_dir)
 
 	os.chdir(output_dir)
-	
+
 	print 'Output Directory: ', os.getcwd()
 
 	if verbose:
