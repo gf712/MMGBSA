@@ -102,7 +102,7 @@ def main(data_dir, output_dir, output_file, verbose, plot, plot_title):
 			plt.legend(prop={'size':8})
 			plt.tight_layout()
 			plt.subplots_adjust(hspace=0.2, top=.9)
-		plt.savefig(plot_title+'.png')
+		plt.savefig((output_file+'.png')
 
 	np.savetxt(output_file+'_delta_total', delta_total)
 	np.savetxt(output_file+'_complex_total', complex_total)
