@@ -108,6 +108,7 @@ def main(data_dir, output_dir, output_file, verbose, plot, plot_title):
 	np.savetxt(output_file+'_complex_total', complex_total)
 	np.savetxt(output_file+'_receptor_total', receptor_total)
 	np.savetxt(output_file+'_ligand_total', ligand_total)
+        plt.savefig((output_file + '.png'))
 
 if __name__ == "__main__":
     main(args.input, args.output, args.output_file, args.verbose, args.plot, args.plot_title)  
