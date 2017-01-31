@@ -121,7 +121,7 @@ Standard Deviation of Delta Total: %.2f\n""" %
             plt.legend(prop={'size': 8})
             plt.tight_layout()
             plt.subplots_adjust(hspace=0.2, top=.9)
-        plt.savefig((output_file + '.png'))
+        plt.savefig((output_file + '.pdf'))
 
     np.savetxt(output_file + '_delta_total', delta_total)
     np.savetxt(output_file + '_complex_total', complex_total)
