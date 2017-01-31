@@ -110,6 +110,12 @@ Standard Deviation of Delta Total: %.2f\n""" %
             plt.title(names[i], size=16)
             plt.plot(df['Time'], df['Energy'],
                      label='avg = %.2f kcal/mol\nstd = %.2f kcal/mol' % (data.mean(), data.std()))
+            # Shared limits for Y axis for the complex and receptor plots
+            if i < 2:
+                y_min = min(complex_total.min(), receptor_total.min())
+                y_max = max(complex_total.max(), receptor_total.max())
+                y_diff = abs(y_max - y_min)
+                plt.ylim(y_min - abs(y_diff * 0.05), y_max + abs(y_diff * 0.05))
             plt.legend(prop={'size': 8})
             plt.tight_layout()
             plt.subplots_adjust(hspace=0.2, top=.9)
