@@ -30,12 +30,16 @@ parser.add_argument("-i", "--input", help="""Input directory containing
                     type=str)
 parser.add_argument("-o", "--output", help="""Output directory for all the
                                             generated files.""",
+                    default='plots',
                     type=str)
 parser.add_argument("-fo", "--output_file", help="""Output file name.""",
+                    default='plot',
                     type=str)
 parser.add_argument("-pt", "--plot_title", help="""Plot title.""",
-                    default='$\Delta$Total Energy - 50 frame rolling average',
+                    default='$\Delta$Total Energy',
                     type=str)
+parser.add_argument("-ts", "--time_step", help="Time step (in ns) between frames",
+                    default=0.02, type=float)
 parser.add_argument("-v", "--verbose", help="""Switch verbose on/off.
                                                 Default is True.""",
                     default=True, type=bool)
