@@ -77,6 +77,7 @@ def main(data_dir, output_dir, output_file, verbose, plot, plot_title):
     receptor_total = np.loadtxt('./Analysis/data._MMPBSA_receptor_gb')
     ligand_total = np.loadtxt('./Analysis/data._MMPBSA_ligand_gb')
     delta_total = complex_total - receptor_total - ligand_total
+    n_frames = delta_total.shape[0]
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -90,13 +91,12 @@ def main(data_dir, output_dir, output_file, verbose, plot, plot_title):
 Average receptor Energy: %.2f kcal/mol\n
 Average ligand Energy: %.2f kcal/mol\n
 Average Delta Total: %.2f kcal/mol\n
-Standard Deviation of Delta Total: %.2f\n""" %
+Standard Deviation of Delta Total: %.2f\n
+Loaded frames: %d\n""" %
               (complex_total.mean(), receptor_total.mean(), ligand_total.mean(),
-               delta_total.mean(), delta_total.std()))
+               delta_total.mean(), delta_total.std(), n_frames))
 
     names = ['Complex Contribution', 'Receptor Contribution', 'Ligand Contribution', '$\Delta$ Total']
-
-    n_frames = delta_total.shape[0]
 
     if plot:
         plt.figure(figsize=(12, 12))
