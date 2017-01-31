@@ -2,6 +2,7 @@
 # Authors: Gil Ferreira Hoben, Juan Eiros
 # Script to process data collected from MMGBSA.py from Amber
 
+from __future__ import print_function
 import subprocess
 import os
 from glob import glob
@@ -71,15 +72,15 @@ def main(data_dir, output_dir, output_file, verbose, plot, plot_title):
 
     os.chdir(output_dir)
 
-    print 'Output Directory: ', os.getcwd()
+    print('Output Directory: ', os.getcwd())
 
     if verbose:
 
-        print """Average complex Energy: %.2f kcal/mol' % complex_total.mean()\n
+        print("""Average complex Energy: %.2f kcal/mol' % complex_total.mean()\n
 Average receptor Energy: %.2f kcal/mol' % receptor_total.mean()\n
 Average ligand Energy: %.2f kcal/mol' % ligand_total.mean()\n
 Average Delta Total: %.2f kcal/mol' % delta_total.mean()\n
-Standard Deviation of Delta Total: %.2f' % delta_total.std()\n"""
+Standard Deviation of Delta Total: %.2f' % delta_total.std()\n""")
 
     names = ['Complex Contribution', 'Receptor Contribution', 'Ligand Contribution', '$\Delta$ Total']
 
