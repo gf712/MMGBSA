@@ -116,6 +116,8 @@ Standard Deviation of Delta Total: %.2f\n""" %
                 y_max = max(complex_total.max(), receptor_total.max())
                 y_diff = abs(y_max - y_min)
                 plt.ylim(y_min - abs(y_diff * 0.05), y_max + abs(y_diff * 0.05))
+            plt.ylabel('$\Delta$G (kcal/mol)', size=15)
+            plt.xlabel('Time (ns)', size=15)
             plt.legend(prop={'size': 8})
             plt.tight_layout()
             plt.subplots_adjust(hspace=0.2, top=.9)
