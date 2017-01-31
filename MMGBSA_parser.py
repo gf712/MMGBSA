@@ -8,11 +8,15 @@ import os
 from glob import glob
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
 import pandas as pd
 import argparse
 import sys
 import seaborn as sns
 sns.set_style('whitegrid')
+matplotlib.rcParams['xtick.labelsize'] = 12
+matplotlib.rcParams['ytick.labelsize'] = 12
+matplotlib.rcParams['font.family'] = "sans-serif"
 
 
 # Command line parser
