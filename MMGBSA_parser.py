@@ -102,8 +102,9 @@ Loaded frames: %d\n""" %
         plt.figure(figsize=(12, 12))
         plt.suptitle(plot_title, size=22)
         for i, data in enumerate([complex_total, receptor_total, ligand_total, delta_total]):
+            # Create DataFrame, with Energy and Time columns
             df = pd.DataFrame({
-                'Energy': pd.Series(data).rolling(window=max(1, int(n_frames / 100))).mean(),
+                'Energy': pd.Series(data).rolling(window=max(1, int(n_frames / 100))).mean(),  # Moving avg
                 'Time': pd.Series([x * args.time_step for x in range(0, n_frames)])
             })
             plt.subplot(2, 2, i + 1)
@@ -114,8 +115,9 @@ Loaded frames: %d\n""" %
             if i < 2:
                 y_min = min(complex_total.min(), receptor_total.min())
                 y_max = max(complex_total.max(), receptor_total.max())
-                y_diff = abs(y_max - y_min)
-                plt.ylim(y_min - abs(y_diff * 0.05), y_max + abs(y_diff * 0.05))
+                # Make the limits be .1% above the min and max values
+                offsetY = min(abs(y_min * 0.001), abs(y_max * 0.001))
+                plt.ylim(y_min - offsetY, y_max + offsetY)
             plt.ylabel('$\Delta$G (kcal/mol)', size=15)
             plt.xlabel('Time (ns)', size=15)
             plt.legend(prop={'size': 8})
