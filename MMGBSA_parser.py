@@ -11,6 +11,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import argparse
 import sys
+import seaborn as sns
+sns.set_style('whitegrid')
 
 
 # Command line parser
