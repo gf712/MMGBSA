@@ -65,7 +65,7 @@ def main(data_dir, output_dir, output_file, verbose, plot, plot_title):
     complex_total = np.loadtxt('./Analysis/data._MMPBSA_complex_gb')
     receptor_total = np.loadtxt('./Analysis/data._MMPBSA_receptor_gb')
     ligand_total = np.loadtxt('./Analysis/data._MMPBSA_ligand_gb')
-
+    delta_total = complex_total - receptor_total - ligand_total
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -75,17 +75,11 @@ def main(data_dir, output_dir, output_file, verbose, plot, plot_title):
 
     if verbose:
 
-        print 'Average complex Energy: %.2f kcal/mol' % complex_total.mean()
-        print 'Average receptor Energy: %.2f kcal/mol' % receptor_total.mean()
-        print 'Average ligand Energy: %.2f kcal/mol' % ligand_total.mean()
-
-    # calculate delta total
-    delta_total = complex_total - receptor_total - ligand_total
-
-    if verbose:
-
-        print 'Average Delta Total: %.2f kcal/mol' % delta_total.mean()
-        print 'Standard Deviation of Delta Total: %.2f' % delta_total.std()
+        print """Average complex Energy: %.2f kcal/mol' % complex_total.mean()\n
+Average receptor Energy: %.2f kcal/mol' % receptor_total.mean()\n
+Average ligand Energy: %.2f kcal/mol' % ligand_total.mean()\n
+Average Delta Total: %.2f kcal/mol' % delta_total.mean()\n
+Standard Deviation of Delta Total: %.2f' % delta_total.std()\n"""
 
     names = ['Complex Contribution', 'Receptor Contribution', 'Ligand Contribution', '$\Delta$ Total']
 
