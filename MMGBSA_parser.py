@@ -92,9 +92,10 @@ Standard Deviation of Delta Total: %.2f\n""" %
         plt.figure(figsize=(12, 12))
         plt.suptitle(plot_title, size=22)
         for i, data in enumerate([complex_total, receptor_total, ligand_total, delta_total]):
+            df = pd.DataFrame(data)
             plt.subplot(2, 2, i + 1)
             plt.title(names[i], size=16)
-            plt.plot(pd.DataFrame(data).rolling(window=max(1, int(n_frames / 100))).mean(),
+            plt.plot(df.rolling(window=max(1, int(n_frames / 100))).mean(),  # Plot rolling mean for clarity
                      label='Average = %.2f kcal/mol\nStandard deviation = %.2f' % (data.mean(), data.std()))
             plt.ylabel('kcal/mol', size=15)
             plt.xlabel('Frame number', size=15)
