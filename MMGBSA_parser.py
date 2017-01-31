@@ -102,13 +102,14 @@ Standard Deviation of Delta Total: %.2f\n""" %
         plt.figure(figsize=(12, 12))
         plt.suptitle(plot_title, size=22)
         for i, data in enumerate([complex_total, receptor_total, ligand_total, delta_total]):
-            df = pd.DataFrame(data)
+            df = pd.DataFrame({
+                'Energy': pd.Series(data).rolling(window=max(1, int(n_frames / 100))).mean(),
+                'Time': pd.Series([x * args.time_step for x in range(0, n_frames)])
+            })
             plt.subplot(2, 2, i + 1)
             plt.title(names[i], size=16)
-            plt.plot(df.rolling(window=max(1, int(n_frames / 100))).mean(),  # Plot rolling mean for clarity
-                     label='Average = %.2f kcal/mol\nStandard deviation = %.2f' % (data.mean(), data.std()))
-            plt.ylabel('kcal/mol', size=15)
-            plt.xlabel('Frame number', size=15)
+            plt.plot(df['Time'], df['Energy'],
+                     label='avg = %.2f kcal/mol\nstd = %.2f kcal/mol' % (data.mean(), data.std()))
             plt.legend(prop={'size': 8})
             plt.tight_layout()
             plt.subplots_adjust(hspace=0.2, top=.9)
