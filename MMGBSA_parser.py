@@ -76,11 +76,13 @@ def main(data_dir, output_dir, output_file, verbose, plot, plot_title):
 
     if verbose:
 
-        print("""Average complex Energy: %.2f kcal/mol' % complex_total.mean()\n
-Average receptor Energy: %.2f kcal/mol' % receptor_total.mean()\n
-Average ligand Energy: %.2f kcal/mol' % ligand_total.mean()\n
-Average Delta Total: %.2f kcal/mol' % delta_total.mean()\n
-Standard Deviation of Delta Total: %.2f' % delta_total.std()\n""")
+        print("""\nAverage complex Energy: %.2f kcal/mol\n
+Average receptor Energy: %.2f kcal/mol\n
+Average ligand Energy: %.2f kcal/mol\n
+Average Delta Total: %.2f kcal/mol\n
+Standard Deviation of Delta Total: %.2f\n""" %
+              (complex_total.mean(), receptor_total.mean(), ligand_total.mean(),
+               delta_total.mean(), delta_total.std()))
 
     names = ['Complex Contribution', 'Receptor Contribution', 'Ligand Contribution', '$\Delta$ Total']
 
