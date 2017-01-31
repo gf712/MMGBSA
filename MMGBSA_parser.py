@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Author: Gil Ferreira Hoben
+# Authors: Gil Ferreira Hoben, Juan Eiros
 # Script to process data collected from MMGBSA.py from Amber
 
 import subprocess
