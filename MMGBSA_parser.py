@@ -1,15 +1,22 @@
 #!/usr/bin/env python
-# Author: Gil Ferreira Hoben
+# Authors: Gil Ferreira Hoben, Juan Eiros
 # Script to process data collected from MMGBSA.py from Amber
 
+from __future__ import print_function
 import subprocess
 import os
 from glob import glob
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
 import pandas as pd
 import argparse
 import sys
+import seaborn as sns
+sns.set_style('whitegrid')
+matplotlib.rcParams['xtick.labelsize'] = 12
+matplotlib.rcParams['ytick.labelsize'] = 12
+matplotlib.rcParams['font.family'] = "sans-serif"
 
 
 # Command line parser
@@ -23,12 +30,16 @@ parser.add_argument("-i", "--input", help="""Input directory containing
                     type=str)
 parser.add_argument("-o", "--output", help="""Output directory for all the
                                             generated files.""",
+                    default='plots',
                     type=str)
 parser.add_argument("-fo", "--output_file", help="""Output file name.""",
+                    default='plot',
                     type=str)
 parser.add_argument("-pt", "--plot_title", help="""Plot title.""",
-                    default='$\Delta$Total Energy - 50 frame rolling average',
+                    default='$\Delta$Total Energy',
                     type=str)
+parser.add_argument("-ts", "--time_step", help="Time step (in ns) between frames",
+                    default=0.02, type=float)
 parser.add_argument("-v", "--verbose", help="""Switch verbose on/off.
                                                 Default is True.""",
                     default=True, type=bool)
@@ -65,27 +76,25 @@ def main(data_dir, output_dir, output_file, verbose, plot, plot_title):
     complex_total = np.loadtxt('./Analysis/data._MMPBSA_complex_gb')
     receptor_total = np.loadtxt('./Analysis/data._MMPBSA_receptor_gb')
     ligand_total = np.loadtxt('./Analysis/data._MMPBSA_ligand_gb')
-
+    delta_total = complex_total - receptor_total - ligand_total
+    n_frames = delta_total.shape[0]
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
     os.chdir(output_dir)
 
-    print 'Output Directory: ', os.getcwd()
+    print('Output Directory: ', os.getcwd())
 
     if verbose:
 
-        print 'Average complex Energy: %.2f kcal/mol' % complex_total.mean()
-        print 'Average receptor Energy: %.2f kcal/mol' % receptor_total.mean()
-        print 'Average ligand Energy: %.2f kcal/mol' % ligand_total.mean()
-
-    # calculate delta total
-    delta_total = complex_total - receptor_total - ligand_total
-
-    if verbose:
-
-        print 'Average Delta Total: %.2f kcal/mol' % delta_total.mean()
-        print 'Standard Deviation of Delta Total: %.2f' % delta_total.std()
+        print("""\nAverage complex Energy: %.2f kcal/mol\n
+Average receptor Energy: %.2f kcal/mol\n
+Average ligand Energy: %.2f kcal/mol\n
+Average Delta Total: %.2f kcal/mol\n
+Standard Deviation of Delta Total: %.2f\n
+Loaded frames: %d\n""" %
+              (complex_total.mean(), receptor_total.mean(), ligand_total.mean(),
+               delta_total.mean(), delta_total.std(), n_frames))
 
     names = ['Complex Contribution', 'Receptor Contribution', 'Ligand Contribution', '$\Delta$ Total']
 
@@ -93,16 +102,28 @@ def main(data_dir, output_dir, output_file, verbose, plot, plot_title):
         plt.figure(figsize=(12, 12))
         plt.suptitle(plot_title, size=22)
         for i, data in enumerate([complex_total, receptor_total, ligand_total, delta_total]):
+            # Create DataFrame, with Energy and Time columns
+            df = pd.DataFrame({
+                'Energy': pd.Series(data).rolling(window=max(1, int(n_frames / 100))).mean(),  # Moving avg
+                'Time': pd.Series([x * args.time_step for x in range(0, n_frames)])
+            })
             plt.subplot(2, 2, i + 1)
             plt.title(names[i], size=16)
-            plt.plot(pd.rolling_mean(pd.DataFrame(data), 50),
-                     label='Average = %.2f kcal/mol\nStandard deviation = %.2f' % (data.mean(), data.std()))
-            plt.ylabel('kcal/mol', size=15)
-            plt.xlabel('Frame number', size=15)
+            plt.plot(df['Time'], df['Energy'],
+                     label='avg = %.2f kcal/mol\nstd = %.2f kcal/mol' % (data.mean(), data.std()))
+            # Shared limits for Y axis for the complex and receptor plots
+            if i < 2:
+                y_min = min(complex_total.min(), receptor_total.min())
+                y_max = max(complex_total.max(), receptor_total.max())
+                # Make the limits be .1% above the min and max values
+                offsetY = min(abs(y_min * 0.001), abs(y_max * 0.001))
+                plt.ylim(y_min - offsetY, y_max + offsetY)
+            plt.ylabel('$\Delta$G (kcal/mol)', size=15)
+            plt.xlabel('Time (ns)', size=15)
             plt.legend(prop={'size': 8})
             plt.tight_layout()
             plt.subplots_adjust(hspace=0.2, top=.9)
-        plt.savefig((output_file + '.png'))
+        plt.savefig((output_file + '.pdf'))
 
     np.savetxt(output_file + '_delta_total', delta_total)
     np.savetxt(output_file + '_complex_total', complex_total)
