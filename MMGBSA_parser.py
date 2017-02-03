@@ -20,40 +20,41 @@ matplotlib.rcParams['font.family'] = "sans-serif"
 
 
 # Command line parser
-parser = argparse.ArgumentParser(usage="""{} """.
-                                 format(sys.argv[0]),
-                                 epilog="""Script to extract information from
-                                 MMGBSA.py Amber 15 output.""")
+def parse_args():
+    parser = argparse.ArgumentParser(usage="""{} """.
+                                     format(sys.argv[0]),
+                                     epilog="""Script to extract information from
+                                     MMGBSA.py Amber 15 output.""")
 
-parser.add_argument("-i", "--input", help="""Input directory containing
-                                             output of MMGBSA.py.""",
-                    type=str)
-parser.add_argument("-o", "--output", help="""Output directory for all the
-                                            generated files.""",
-                    default='plots',
-                    type=str)
-parser.add_argument("-fo", "--output_file", help="""Output file name.""",
-                    default='plot',
-                    type=str)
-parser.add_argument("-pt", "--plot_title", help="""Plot title.""",
-                    default='$\Delta$Total Energy',
-                    type=str)
-parser.add_argument("-ts", "--time_step", help="Time step (in ns) between frames",
-                    default=0.02, type=float)
-parser.add_argument("-v", "--verbose", help="""Switch verbose on/off.
-                                                Default is True.""",
-                    default=True, type=bool)
-parser.add_argument("-p", "--plot", help="""Switch plotting on/off.
-                                                Default is True.""",
-                    default=True, type=bool)
-args = parser.parse_args()
+    parser.add_argument("-i", "--input_dir", help="""Input directory containing
+                                                 output of MMGBSA.py.""",
+                        type=str)
+    parser.add_argument("-o", "--output_dir", help="""Output directory for all the
+                                                generated files.""",
+                        default='plots',
+                        type=str)
+    parser.add_argument("-fo", "--output_file", help="""Output file name.""",
+                        default='plot',
+                        type=str)
+    parser.add_argument("-pt", "--plot_title", help="""Plot title.""",
+                        default='$\Delta$Total Energy',
+                        type=str)
+    parser.add_argument("-ts", "--time_step", help="Time step (in ns) between frames",
+                        default=0.02, type=float)
+    parser.add_argument("-v", "--verbose", help="""Switch verbose on/off.
+                                                    Default is True.""",
+                        default=True, type=bool)
+    parser.add_argument("-p", "--plot", help="""Switch plotting on/off.
+                                                    Default is True.""",
+                        default=True, type=bool)
+    return parser.parse_args()
 
 
-def main(data_dir, output_dir, output_file, verbose, plot, plot_title):
+def main(args):
 
     # first move to data directory and create an Analysis folder to dump all the data
     # mmgbsa_parser.sh is called to extract all the data
-    os.chdir(data_dir)
+    os.chdir(args.input_dir)
     subprocess.call(['bash', 'mmpbsa_parser.sh'])
 
     # Get the data from each file created by mmgbsa_parser.sh to calculate delta total
@@ -78,14 +79,14 @@ def main(data_dir, output_dir, output_file, verbose, plot, plot_title):
     ligand_total = np.loadtxt('./Analysis/data._MMPBSA_ligand_gb')
     delta_total = complex_total - receptor_total - ligand_total
     n_frames = delta_total.shape[0]
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    if not os.path.exists(args.output_dir):
+        os.makedirs(args.output_dir)
 
-    os.chdir(output_dir)
+    os.chdir(args.output_dir)
 
     print('Output Directory: ', os.getcwd())
 
-    if verbose:
+    if args.verbose:
 
         print("""\nAverage complex Energy: %.2f kcal/mol\n
 Average receptor Energy: %.2f kcal/mol\n
@@ -98,9 +99,9 @@ Loaded frames: %d\n""" %
 
     names = ['Complex Contribution', 'Receptor Contribution', 'Ligand Contribution', '$\Delta$ Total']
 
-    if plot:
+    if args.plot:
         plt.figure(figsize=(12, 12))
-        plt.suptitle(plot_title, size=22)
+        plt.suptitle(args.plot_title, size=22)
         for i, data in enumerate([complex_total, receptor_total, ligand_total, delta_total]):
             # Create DataFrame, with Energy and Time columns
             df = pd.DataFrame({
@@ -116,20 +117,19 @@ Loaded frames: %d\n""" %
                 y_min = min(complex_total.min(), receptor_total.min())
                 y_max = max(complex_total.max(), receptor_total.max())
                 # Make the limits be .1% above the min and max values
-                offsetY = min(abs(y_min * 0.001), abs(y_max * 0.001))
-                plt.ylim(y_min - offsetY, y_max + offsetY)
             plt.ylabel('$\Delta$G (kcal/mol)', size=15)
             plt.xlabel('Time (ns)', size=15)
             plt.legend(prop={'size': 8})
             plt.tight_layout()
             plt.subplots_adjust(hspace=0.2, top=.9)
-        plt.savefig((output_file + '.pdf'))
+        plt.savefig((args.output_file + '.pdf'))
 
-    np.savetxt(output_file + '_delta_total', delta_total)
-    np.savetxt(output_file + '_complex_total', complex_total)
-    np.savetxt(output_file + '_receptor_total', receptor_total)
-    np.savetxt(output_file + '_ligand_total', ligand_total)
+    np.savetxt(args.output_file + '_delta_total', delta_total)
+    np.savetxt(args.output_file + '_complex_total', complex_total)
+    np.savetxt(args.output_file + '_receptor_total', receptor_total)
+    np.savetxt(args.output_file + '_ligand_total', ligand_total)
 
 
 if __name__ == "__main__":
-    main(args.input, args.output, args.output_file, args.verbose, args.plot, args.plot_title)
+    args = parse_args()
+    main(args)
