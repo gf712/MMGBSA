@@ -34,4 +34,4 @@ MMGBSA_parser.py -inf _MMPBSA_info
 
 Leading to the following plot in ```./output_dir/plot.pdf```:
 
-![alt tag](http://imgur.com/xKJhxSC)
+![alt tag](http://i.imgur.com/xKJhxSC.png)
