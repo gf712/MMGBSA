@@ -116,7 +116,11 @@ Loaded frames: %d\n""" %
             if i < 2:
                 y_min = min(complex_total.min(), receptor_total.min())
                 y_max = max(complex_total.max(), receptor_total.max())
-                # Make the limits be .1% above the min and max values
+                # Make whitespace above and bottom to be 2.5% of plot
+                # so diff between max and min values is 95%
+                total_y_space = abs(y_min - y_max) / 0.95
+                offsetY = total_y_space * 0.025
+                plt.ylim(round(y_min - offsetY), round(y_max + offsetY))
             plt.ylabel('$\Delta$G (kcal/mol)', size=15)
             plt.xlabel('Time (ns)', size=15)
             plt.legend(prop={'size': 8})
