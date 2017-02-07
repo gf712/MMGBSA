@@ -4,12 +4,12 @@ Python code to be executed from the command line.
 
 Usage info:
 ```
-$ MMGBSA_parser.py  --help
+$ MMGBSA_parser.py --help
 usage: /Users/je714/Projects/MMGBSA/MMGBSA_parser.py
 
 optional arguments:
   -h, --help            show this help message and exit
-  -inf INFO_FILE, --info_file INFO_FILE
+  -i INFO_FILE, --info_file INFO_FILE
                         The information file that is printed after the MMPBSA
                         calculation. Default is _MMPBSA_info
   -o OUTPUT_DIR, --output_dir OUTPUT_DIR
