@@ -34,8 +34,6 @@ def parse_args():
                                      epilog="""Script to extract information from
                                      MMGBSA.py Amber 15 output.""")
 
-    # parser.add_argument("-i", "--input_dir", help="""Input directory containing
-    #                                              output of MMGBSA.py.""", type=str)
     parser.add_argument("-inf", "--info_file", type=str, default="_MMPBSA_info",
                         help="""The information file that is printed after the
                         MMPBSA calculation. Default is _MMPBSA_info""")
