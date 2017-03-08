@@ -17,7 +17,8 @@ import seaborn as sns
 
 
 # Import MMPBSA API from local AMBERHOME installation
-sys.path.append(os.path.join(os.getenv('AMBERHOME'), 'bin'))  # append AMBERHOME/bin to sys.path
+# append AMBERHOME/bin to sys.path
+sys.path.append(os.path.join(os.getenv('AMBERHOME'), 'bin'))
 from MMPBSA_mods import API as MMPBSA_API
 
 # Plotting settings
@@ -37,21 +38,18 @@ def parse_args():
     parser.add_argument("-i", "--info_file", type=str, default="_MMPBSA_info",
                         help="""The information file that is printed after the
                         MMPBSA calculation. Default is _MMPBSA_info""")
-    parser.add_argument("-o", "--output_dir", help="""Output directory for all the
-                                                generated files.""",
-                        default='plots', type=str)
-    parser.add_argument("-fo", "--output_file", help="""Output file name.""",
-                        default='plot', type=str)
-    parser.add_argument("-pt", "--plot_title", help="""Plot title.""",
-                        default='$\Delta$Total Energy', type=str)
-    parser.add_argument("-ts", "--time_step", help="Time step (in ns) between frames",
-                        default=0.02, type=float)
-    parser.add_argument("-v", "--verbose", help="""Switch verbose on/off.
-                                                    Default is True.""",
-                        default=True, type=bool)
-    parser.add_argument("-p", "--plot", help="""Switch plotting on/off.
-                                                    Default is True.""",
-                        default=True, type=bool)
+    parser.add_argument("-o", "--output_dir", type=str, default='plots',
+                        help='Output directory for all the generated files.')
+    parser.add_argument("-fo", "--output_file", type=str, default='plot',
+                        help='Output file name.')
+    parser.add_argument("-pt", "--plot_title", type=str, default='$\Delta$Total Energy',
+                        help='Plot title.')
+    parser.add_argument("-ts", "--time_step", type=float, default=0.02,
+                        help='Time step (in ns) between frames')
+    parser.add_argument("-v", "--verbose", type=bool, default=True,
+                        help='Switch verbose on/off. Default is True')
+    parser.add_argument("-p", "--plot", type=bool, default=True,
+                        help='Switch plotting on/off. Default is True.')
     return parser.parse_args()
 
 
@@ -96,20 +94,24 @@ def saveDataFrames(dict_of_dfs):
 
 
 def makeTimeSeriesPlots(dict_of_dfs, n_frames):
-    names = ['Complex Contribution', 'Receptor Contribution', 'Ligand Contribution', '$\Delta$ Total']
+    names = ['Complex Contribution', 'Receptor Contribution',
+             'Ligand Contribution', '$\Delta$ Total']
     plt.figure(figsize=(12, 12))
     plt.suptitle(args.plot_title, size=22)
     for i, df in enumerate(dict_of_dfs.values()):
         # Create DataFrame, with Energy and Time columns
         df_ene = pd.DataFrame({
             'Energy': df['TOTAL'],
-            'Energy_avg': df['TOTAL'].rolling(window=max(1, int(n_frames / 100))).mean(),  # Moving avg
+            # Moving avg
+            'Energy_avg': df['TOTAL'].rolling(window=max(1, int(n_frames / 100))).mean(),
             'Time': pd.Series([x * args.time_step for x in range(0, n_frames)])
         })
         plt.subplot(2, 2, i + 1)
         plt.title(names[i], size=16)
-        plt.plot(df_ene['Time'], df_ene['Energy'], alpha=0.2, color='#1f77b4', label='Energy')
-        plt.plot(df_ene['Time'], df_ene['Energy_avg'], color='#1f77b4', label='Moving avg')
+        plt.plot(df_ene['Time'], df_ene['Energy'],
+                 alpha=0.2, color='#1f77b4', label='Energy')
+        plt.plot(df_ene['Time'], df_ene['Energy_avg'],
+                 color='#1f77b4', label='Moving avg')
         # Shared limits for Y axis for the complex and receptor plots
         if i < 2:
             y_min = min(dict_of_dfs['complex']['TOTAL'].min(), dict_of_dfs['receptor']['TOTAL'].min())
@@ -160,7 +162,6 @@ def main(args):
     if args.plot:
         makeTimeSeriesPlots(data_dfs, n_frames)
 
-    # Save data frames
     saveDataFrames(data_dfs)
 
 if __name__ == "__main__":
