@@ -122,7 +122,7 @@ def makeTimeSeriesPlots(dict_of_dfs, n_frames):
             offsetY = total_y_space * 0.025
             plt.ylim(round(y_min - offsetY), round(y_max + offsetY))
         plt.xlim(0, round(n_frames * args.time_step))
-        plt.ylabel('$\Delta$G (kcal/mol)', size=15)
+        plt.ylabel('$\Delta G (kcal \cdot mol^{-1}$)', size=15)
         plt.xlabel('Time (ns)', size=15)
         plt.legend(prop={'size': 8})
         plt.tight_layout()
