@@ -32,6 +32,8 @@ For example:
 MMGBSA_parser.py -inf _MMPBSA_info
 ```
 
-Leading to the following plot in ```./output_dir/plot.pdf```:
+Leading to the following plots in ```./output_dir/```:
 
-![alt tag](http://i.imgur.com/xKJhxSC.png)
+![four_plots](http://i.imgur.com/MCNBiI8.png)
+
+![individual](http://i.imgur.com/QY1nX7s.png)
