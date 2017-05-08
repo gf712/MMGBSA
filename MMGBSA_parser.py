@@ -14,6 +14,8 @@ import pandas as pd
 import argparse
 import sys
 import seaborn as sns
+from msmexplorer import plot_trace
+from matplotlib.ticker import FuncFormatter
 
 
 # Import MMPBSA API from local AMBERHOME installation
@@ -131,6 +133,25 @@ def makeTimeSeriesPlots(dict_of_dfs, n_frames):
     plt.savefig((args.output_file + '.png'), dpi=80)
 
 
+def to_ns(x, pos):
+    return '{:.0f}'.format(x * args.time_step)
+
+
+def plot_individual_energy(data, plot_trace_kwargs=None, save=True):
+    if plot_trace_kwargs is None:
+        plot_trace_kwargs = {}
+    ax, side_ax = plot_trace(data, **plot_trace_kwargs)
+    ax.set(title=args.plot_title, xlabel='Time (ns)',
+           ylabel='$\Delta G (kcal \cdot mol^{-1}$)')
+    formatter = FuncFormatter(to_ns)
+    ax.xaxis.set_major_formatter(formatter)
+    if save:
+        f = plt.gcf()
+        f.savefig((args.output_file + '_individual.pdf'))
+        f.savefig((args.output_file + '_individual.png'), dpi=80)
+    return ax, side_ax
+
+
 def main(args):
 
     # First move to data directory and create an the output folder and cd into it
@@ -164,6 +185,10 @@ def main(args):
         makeTimeSeriesPlots(data_dfs, n_frames)
 
     saveDataFrames(data_dfs)
+
+    # Make an individual plot of the Difference
+    plot_individual_energy(data=np.array(data_dfs['difference']['TOTAL']),
+                           plot_trace_kwargs={'color': '#1f77b4'})
 
 if __name__ == "__main__":
     args = parse_args()
