@@ -39,9 +39,9 @@ def parse_args():
                         help="""The information file that is printed after the
                         MMPBSA calculation. Default is _MMPBSA_info""")
     parser.add_argument("-o", "--output_dir", type=str, default='plots',
-                        help='Output directory for all the generated files.')
+                        help='Output directory for all the generated files. Default is plots/')
     parser.add_argument("-fo", "--output_file", type=str, default='plot',
-                        help='Output file name.')
+                        help='Output file name. Default is plot.')
     parser.add_argument("-pt", "--plot_title", type=str, default='$\Delta$Total Energy',
                         help='Plot title.')
     parser.add_argument("-ts", "--time_step", type=float, default=0.02,
