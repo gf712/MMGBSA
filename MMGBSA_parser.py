@@ -128,6 +128,7 @@ def makeTimeSeriesPlots(dict_of_dfs, n_frames):
         plt.tight_layout()
         plt.subplots_adjust(hspace=0.2, top=.9)
     plt.savefig((args.output_file + '.pdf'))
+    plt.savefig((args.output_file + '.png'), dpi=80)
 
 
 def main(args):
