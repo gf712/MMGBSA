@@ -110,8 +110,10 @@ def makeTimeSeriesPlots(dict_of_dfs, n_frames):
         })
         plt.subplot(2, 2, i + 1)
         plt.title(names[i], size=16)
+        # actual values
         plt.plot(df_ene['Time'], df_ene['Energy'],
                  alpha=0.2, color='#1f77b4', label='Energy')
+        # moving avg
         plt.plot(df_ene['Time'], df_ene['Energy_avg'],
                  color='#1f77b4', label='Moving avg')
         # Shared limits for Y axis for the complex and receptor plots
@@ -140,7 +142,13 @@ def to_ns(x, pos):
 def plot_individual_energy(data, plot_trace_kwargs=None, save=True):
     if plot_trace_kwargs is None:
         plot_trace_kwargs = {}
-    ax, side_ax = plot_trace(data, **plot_trace_kwargs)
+    # actual values
+    ax, side_ax = plot_trace(data=data, window=1, alpha=0.2, label='Energy',
+                             **plot_trace_kwargs)
+    # moving avg
+    plot_trace(data=data, window=max(1, int(len(data) / 100)), label='Moving avg',
+               ax=ax, alpha=1,
+               **plot_trace_kwargs)
     ax.set(title=args.plot_title, xlabel='Time (ns)',
            ylabel='$\Delta G (kcal \cdot mol^{-1}$)')
     formatter = FuncFormatter(to_ns)
