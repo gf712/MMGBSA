@@ -130,7 +130,7 @@ def makeTimeSeriesPlots(dict_of_dfs, n_frames):
         plt.tight_layout()
         plt.subplots_adjust(hspace=0.2, top=.9)
     plt.savefig((args.output_file + '.pdf'))
-    plt.savefig((args.output_file + '.png'), dpi=80)
+    plt.savefig((args.output_file + '.png'), dpi=300)
 
 
 def to_ns(x, pos):
@@ -152,7 +152,7 @@ def plot_individual_energy(data, plot_trace_kwargs=None, save=True):
     if save:
         f = plt.gcf()
         f.savefig((args.output_file + '_individual.pdf'))
-        f.savefig((args.output_file + '_individual.png'), dpi=80)
+        f.savefig((args.output_file + '_individual.png'), dpi=300)
     return ax, side_ax
 
 
