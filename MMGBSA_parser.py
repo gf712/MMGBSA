@@ -48,8 +48,6 @@ def parse_args():
                         help='Plot title.')
     parser.add_argument("-ts", "--time_step", type=float, default=0.02,
                         help='Time step (in ns) between frames')
-    parser.add_argument("-v", "--verbose", type=bool, default=True,
-                        help='Switch verbose on/off. Default is True')
     parser.add_argument("-p", "--plot", type=bool, default=True,
                         help='Switch plotting on/off. Default is True.')
     return parser.parse_args()
@@ -173,20 +171,19 @@ def main(args):
         os.makedirs(args.output_dir)
     os.chdir(args.output_dir)
 
-    if args.verbose:
-        print('Output Directory: ', os.getcwd())
-        # complex
-        print('\ncomplex energy:\t\t%.2f %s %.2f\n'
-              % (data_dfs['complex']['TOTAL'].mean(), chr(177), data_dfs['complex']['TOTAL'].std()))
-        # receptor
-        print('receptor energy:\t%.2f %s %.2f\n'
-              % (data_dfs['receptor']['TOTAL'].mean(), chr(177), data_dfs['receptor']['TOTAL'].std()))
-        # ligand
-        print('ligand energy:\t\t%.2f %s %.2f\n'
-              % (data_dfs['ligand']['TOTAL'].mean(), chr(177), data_dfs['ligand']['TOTAL'].std()))
-        # difference
-        print('difference energy:\t%.2f %s %.2f\n'
-              % (data_dfs['difference']['TOTAL'].mean(), chr(177), data_dfs['difference']['TOTAL'].std()))
+    print('Output Directory: ', os.getcwd())
+    # complex
+    print('\ncomplex energy:\t\t%.2f %s %.2f\n'
+          % (data_dfs['complex']['TOTAL'].mean(), chr(177), data_dfs['complex']['TOTAL'].std()))
+    # receptor
+    print('receptor energy:\t%.2f %s %.2f\n'
+          % (data_dfs['receptor']['TOTAL'].mean(), chr(177), data_dfs['receptor']['TOTAL'].std()))
+    # ligand
+    print('ligand energy:\t\t%.2f %s %.2f\n'
+          % (data_dfs['ligand']['TOTAL'].mean(), chr(177), data_dfs['ligand']['TOTAL'].std()))
+    # difference
+    print('difference energy:\t%.2f %s %.2f\n'
+          % (data_dfs['difference']['TOTAL'].mean(), chr(177), data_dfs['difference']['TOTAL'].std()))
 
     # Make a 2x2 plot with time series of Delta G binding
     if args.plot:
