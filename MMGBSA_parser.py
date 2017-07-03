@@ -138,11 +138,27 @@ def to_ns(x, pos):
 
 
 def plot_individual_energy(data, plot_trace_kwargs=None, save=True):
+    """
+    Individual plot of the Delta G time evolution
+    :param data: np.array
+    :param plot_trace_kwargs: kwargs for msmexplorer's plot_trace function
+    :param save: Bool, save image or not
+    :return ax, side_ax: The main and side axis produced by plot_trace
+    """
     if plot_trace_kwargs is None:
         plot_trace_kwargs = {}
     # actual values
     ax, side_ax = plot_trace(data=data, window=1, alpha=0.2,
                              **plot_trace_kwargs)
+    # mean and std lines in side_ax
+    side_ax.axhline(y=data.mean())
+    side_ax.axhline(y=data.mean() - data.std(), ls='--', lw=0.8)
+    side_ax.axhline(y=data.mean() + data.std(), ls='--', lw=0.8)
+    # annotate side_ax with actual values
+    side_ax.annotate(f"\u03bc = {data.mean():.02f}", xy=(0.55, 0.90), xycoords='axes fraction')
+    side_ax.annotate(f"\u03c3 = {data.std():.02f}", xy=(0.55, 0.85), xycoords='axes fraction')
+    # moving avg in ax
+    plot_trace(data=data, window=max(1, int(len(data) / 100)),
                ax=ax, alpha=1,
                **plot_trace_kwargs)
     ax.set(title=args.plot_title, xlabel='Time (ns)',
