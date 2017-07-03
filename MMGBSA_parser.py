@@ -126,7 +126,6 @@ def makeTimeSeriesPlots(dict_of_dfs, n_frames):
         plt.xlim(0, round(n_frames * args.time_step))
         plt.ylabel('$\Delta G (kcal \cdot mol^{-1}$)', size=15)
         plt.xlabel('Time (ns)', size=15)
-        plt.legend(prop={'size': 8})
         plt.tight_layout()
         plt.subplots_adjust(hspace=0.2, top=.9)
     plt.savefig((args.output_file + '.pdf'))
