@@ -1,5 +1,12 @@
-matplotlib
-numpy
-pandas
-seaborn
-msmexplorer
+1、matplotlib=2.1.2
+  pip uninstall matplotlib
+  pip install matplotlib==2.1.2
+2、numpy
+3、pandas
+4、seaborn
+5、msmexplorer
+  conda install -c omnia msmexplorer
+  !!! do not support in AmberTools21 !!!
+ 
+/home/$USER/amber[version]/lib/python[version]/site-packages/MMPBSA_mods/findprogs.py   line42
+print '%s found! Using %s' % (prog, str(my_progs[prog])) ----→ print ('%s found! Using %s') % (prog, str(my_progs[prog]))
